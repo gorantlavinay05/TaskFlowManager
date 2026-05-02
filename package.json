@@ -3,13 +3,8 @@
   "version": "1.0.0",
   "description": "Root for TaskFlow Manager",
   "scripts": {
-    "install-backend": "cd backend && npm install",
-    "install-frontend": "cd frontend && npm install",
-    "install-all": "npm run install-backend && npm run install-frontend",
-    "build-frontend": "cd frontend && npm run build",
-    "build": "npm run install-all && npm run build-frontend",
-    "start": "cd backend && npm start",
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm start --prefix backend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

@@ -14,9 +14,13 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch((err) => console.error('MongoDB connection error:', err));
+} else {
+  console.warn('MONGODB_URI is not defined. Database features will not work.');
+}
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -31,11 +35,15 @@ if (process.env.NODE_ENV === 'production') {
   
   app.use(express.static(frontendPath));
 
-  app.get('/:path*', (req, res) => {
+  // Catch-all route to serve index.html for any non-API route
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
     res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
       if (err) {
         console.error('Error sending index.html:', err);
-        res.status(500).send('Frontend build not found. Ensure "npm run build" was executed.');
+        res.status(500).send('Frontend build not found or Error occurred.');
       }
     });
   });
