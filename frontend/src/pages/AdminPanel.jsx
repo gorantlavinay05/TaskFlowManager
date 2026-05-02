@@ -29,8 +29,9 @@ const AdminPanel = () => {
       setProjects(projectsRes.data);
       setTasks(tasksRes.data);
       
-      if (projectsRes.data.length > 0) setProjectId(projectsRes.data[0]._id);
-      if (usersRes.data.length > 0) setAssigneeId(usersRes.data[0]._id);
+      // Only set initial values if they haven't been set yet
+      setProjectId(prev => prev || (projectsRes.data.length > 0 ? projectsRes.data[0]._id : ''));
+      setAssigneeId(prev => prev || (usersRes.data.length > 0 ? usersRes.data[0]._id : ''));
       
     } catch (err) {
       setError('Failed to load admin data');
