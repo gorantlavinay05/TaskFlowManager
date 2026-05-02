@@ -26,10 +26,18 @@ app.use('/api/users', require('./routes/users'));
 
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  const frontendPath = path.join(__dirname, '../frontend/dist');
+  console.log('Serving frontend from:', frontendPath);
+  
+  app.use(express.static(frontendPath));
 
-  app.get('*path', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
+  app.get('/:path*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
+      if (err) {
+        console.error('Error sending index.html:', err);
+        res.status(500).send('Frontend build not found. Ensure "npm run build" was executed.');
+      }
+    });
   });
 } else {
   app.get('/', (req, res) => {
