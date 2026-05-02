@@ -66,16 +66,16 @@ const Tasks = () => {
                 <div key={task._id} className="bg-white p-4 rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
                   <h4 className="font-semibold text-slate-900 mb-1">{task.title}</h4>
                   <p className="text-sm text-slate-500 mb-3 line-clamp-2">{task.description}</p>
-                  <div className="flex justify-between items-center text-xs text-slate-500 mb-4">
-                    <span className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded">
+                  <div className="flex justify-between items-center text-xs mb-4">
+                    <span className="bg-indigo-100 text-indigo-800 font-medium px-2 py-1 rounded">
                       {task.project?.title || 'Unknown Project'}
                     </span>
-                    {task.dueDate && <span>Due: {new Date(task.dueDate).toLocaleDateString()}</span>}
+                    {task.dueDate && <span className="text-slate-600 font-medium italic">Due: {new Date(task.dueDate).toLocaleDateString()}</span>}
                   </div>
                   
-                  <div className="border-t border-slate-100 pt-3 flex gap-2">
+                  <div className="border-t border-slate-200 pt-3">
                     <select
-                      className="w-full text-xs border border-slate-200 rounded p-1 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full text-xs font-semibold border border-slate-300 rounded-md p-1.5 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                       value={task.status}
                       onChange={(e) => updateStatus(task._id, e.target.value)}
                     >
