@@ -2,9 +2,13 @@
   "name": "taskflow-manager-root",
   "version": "1.0.0",
   "description": "Root for TaskFlow Manager",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "build": "cd backend && npm install && cd ../frontend && npm install && npm run build",
-    "start": "cd backend && npm start"
+    "build": "npm run build -w frontend",
+    "start": "npm start -w backend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
