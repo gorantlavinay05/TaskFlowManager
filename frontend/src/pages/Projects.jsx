@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { Plus, Briefcase } from 'lucide-react';
 
 const Projects = () => {
@@ -10,7 +10,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get(`${"http://localhost:5005/api"}/projects`);
+      const res = await api.get(`/api/projects`);
       setProjects(res.data);
     } catch (err) {
       setError('Failed to load projects');
@@ -27,7 +27,7 @@ const Projects = () => {
     e.preventDefault();
     if (!title.trim()) return;
     try {
-      await axios.post(`${"http://localhost:5005/api"}/projects`, { title });
+      await api.post(`/api/projects`, { title });
       setTitle('');
       fetchProjects();
     } catch (err) {

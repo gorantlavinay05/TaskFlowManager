@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
 import { Plus, CheckSquare } from 'lucide-react';
 
@@ -11,7 +11,7 @@ const Tasks = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get(`${"http://localhost:5005/api"}/tasks`);
+      const res = await api.get(`/api/tasks`);
       setTasks(res.data);
     } catch (err) {
       setError('Failed to load tasks');
@@ -28,7 +28,7 @@ const Tasks = () => {
 
   const updateStatus = async (taskId, newStatus) => {
     try {
-      await axios.put(`${"http://localhost:5005/api"}/tasks/${taskId}`, { status: newStatus });
+      await api.put(`/api/tasks/${taskId}`, { status: newStatus });
       fetchTasks();
     } catch (err) {
       setError('Failed to update task status');

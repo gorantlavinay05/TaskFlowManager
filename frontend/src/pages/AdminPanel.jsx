@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
 import { ShieldCheck, Users, Briefcase, ListTodo, Calendar, Plus } from 'lucide-react';
 
@@ -21,9 +21,9 @@ const AdminPanel = () => {
   const fetchData = async () => {
     try {
       const [usersRes, projectsRes, tasksRes] = await Promise.all([
-        axios.get(`${"http://localhost:5005/api"}/users`),
-        axios.get(`${"http://localhost:5005/api"}/projects`),
-        axios.get(`${"http://localhost:5005/api"}/tasks`)
+        api.get(`/api/users`),
+        api.get(`/api/projects`),
+        api.get(`/api/tasks`)
       ]);
       setUsers(usersRes.data);
       setProjects(projectsRes.data);
@@ -49,7 +49,7 @@ const AdminPanel = () => {
     e.preventDefault();
     if (!title.trim() || !projectId || !assigneeId) return;
     try {
-      await axios.post(`${"http://localhost:5005/api"}/tasks`, {
+      await api.post(`/api/tasks`, {
         title,
         description,
         project: projectId,

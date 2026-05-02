@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 
 export const AuthContext = createContext();
 
@@ -11,9 +11,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // In a real app we might want to fetch user details here if they are not stored.
-      // But we will store them locally for simplicity.
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
@@ -21,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      delete axios.defaults.headers.common['Authorization'];
       setUser(null);
     }
     setLoading(false);
@@ -29,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`http://localhost:5005/api/auth/login`, { email, password });
+      const res = await api.post(`/api/auth/login`, { email, password });
       console.log("Login response:", res.data);
       setToken(res.data.token);
       setUser(res.data.user);
@@ -43,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password, role) => {
     try {
-      const res = await axios.post(`http://localhost:5005/api/auth/register`, { name, email, password, role });
+      const res = await api.post(`/api/auth/register`, { name, email, password, role });
       console.log("Register response:", res.data);
       setToken(res.data.token);
       setUser(res.data.user);

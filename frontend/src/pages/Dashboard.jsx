@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { CheckCircle, Clock, ListTodo } from 'lucide-react';
 
 const Dashboard = () => {
@@ -7,17 +7,18 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const fetchTasks = async () => {
+    try {
+      const res = await api.get(`/api/tasks`);
+      setTasks(res.data);
+    } catch (err) {
+      setError('Failed to load dashboard metrics');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const res = await axios.get(`${"http://localhost:5005/api"}/tasks`);
-        setTasks(res.data);
-      } catch (err) {
-        setError('Failed to load dashboard metrics');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTasks();
     const interval = setInterval(fetchTasks, 5000);
     return () => clearInterval(interval);
@@ -25,9 +26,8 @@ const Dashboard = () => {
 
   const updateStatus = async (taskId, newStatus) => {
     try {
-      await axios.put(`http://localhost:5005/api/tasks/${taskId}`, { status: newStatus });
-      const res = await axios.get(`http://localhost:5005/api/tasks`);
-      setTasks(res.data);
+      await api.put(`/api/tasks/${taskId}`, { status: newStatus });
+      fetchTasks();
     } catch (err) {
       setError('Failed to update task status');
     }
