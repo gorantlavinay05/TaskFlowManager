@@ -30,9 +30,25 @@ app.use('/api/users', require('./routes/users'));
 
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
+  const fs = require('fs');
   const frontendPath = path.join(__dirname, '../frontend/dist');
-  console.log('Serving frontend from:', frontendPath);
   
+  // Debug: List contents of the expected directory
+  try {
+    const parentDir = path.join(__dirname, '..');
+    console.log('Parent directory contents:', fs.readdirSync(parentDir));
+    const frontendDir = path.join(parentDir, 'frontend');
+    console.log('Frontend directory contents:', fs.readdirSync(frontendDir));
+    if (fs.existsSync(frontendPath)) {
+      console.log('Dist directory contents:', fs.readdirSync(frontendPath));
+    } else {
+      console.warn('DIST DIRECTORY DOES NOT EXIST at:', frontendPath);
+    }
+  } catch (err) {
+    console.error('Error listing directories:', err);
+  }
+  
+  console.log('Serving frontend from:', frontendPath);
   app.use(express.static(frontendPath));
 
   // Catch-all route to serve index.html for any non-API route
