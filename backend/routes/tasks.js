@@ -74,4 +74,20 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
+// @route   DELETE /api/tasks/:id
+// @desc    Delete a task
+// @access  Private/Admin
+router.delete('/:id', auth, role(['Admin']), async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) return res.status(404).json({ message: 'Task not found' });
+
+    await Task.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Task removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 module.exports = router;

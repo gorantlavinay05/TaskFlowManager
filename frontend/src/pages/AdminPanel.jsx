@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
-import { ShieldCheck, Users, Briefcase, ListTodo, Calendar, Plus } from 'lucide-react';
+import { ShieldCheck, Users, Briefcase, ListTodo, Calendar, Plus, Trash2 } from 'lucide-react';
 
 const AdminPanel = () => {
   const { user } = useContext(AuthContext);
@@ -63,6 +63,16 @@ const AdminPanel = () => {
       fetchData();
     } catch (err) {
       setError('Failed to assign task');
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    if (!window.confirm('Are you sure you want to delete this task?')) return;
+    try {
+      await api.delete(`/api/tasks/${taskId}`);
+      fetchData();
+    } catch (err) {
+      setError('Failed to delete task');
     }
   };
 
@@ -161,7 +171,7 @@ const AdminPanel = () => {
                     <th className="px-4 py-3">Assignee</th>
                     <th className="px-4 py-3">Status</th>
                     <th className="px-4 py-3">Deadline</th>
-                    <th className="px-4 py-3">Last Updated</th>
+                    <th className="px-4 py-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -187,8 +197,14 @@ const AdminPanel = () => {
                         <td className={`px-4 py-3 ${isOverdue ? 'text-red-600 font-bold' : 'text-slate-500'}`}>
                           {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'None'}
                         </td>
-                        <td className="px-4 py-3 text-slate-400 text-xs italic">
-                          {new Date(task.updatedAt).toLocaleString()}
+                        <td className="px-4 py-3">
+                          <button 
+                            onClick={() => handleDeleteTask(task._id)}
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete Task"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </td>
                       </tr>
                     )
