@@ -7,7 +7,7 @@
     "frontend"
   ],
   "scripts": {
-    "build": "npm run build -w frontend",
+    "build": "npm run build -w frontend && mkdir -p backend/dist && cp -r frontend/dist/* backend/dist/",
     "start": "npm start -w backend"
   },
   "devDependencies": {

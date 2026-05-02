@@ -30,25 +30,9 @@ app.use('/api/users', require('./routes/users'));
 
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
-  const fs = require('fs');
-  const frontendPath = path.join(__dirname, '../frontend/dist');
-  
-  // Debug: List contents of the expected directory
-  try {
-    const parentDir = path.join(__dirname, '..');
-    console.log('Parent directory contents:', fs.readdirSync(parentDir));
-    const frontendDir = path.join(parentDir, 'frontend');
-    console.log('Frontend directory contents:', fs.readdirSync(frontendDir));
-    if (fs.existsSync(frontendPath)) {
-      console.log('Dist directory contents:', fs.readdirSync(frontendPath));
-    } else {
-      console.warn('DIST DIRECTORY DOES NOT EXIST at:', frontendPath);
-    }
-  } catch (err) {
-    console.error('Error listing directories:', err);
-  }
-  
+  const frontendPath = path.join(__dirname, 'dist');
   console.log('Serving frontend from:', frontendPath);
+  
   app.use(express.static(frontendPath));
 
   // Catch-all route to serve index.html for any non-API route
@@ -58,8 +42,8 @@ if (process.env.NODE_ENV === 'production') {
     }
     res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
       if (err) {
-        console.error('Error sending index.html:', err);
-        res.status(500).send('Frontend build not found or Error occurred.');
+        console.error('Error sending index.html from:', frontendPath, err);
+        res.status(500).send('Frontend build not found in backend/dist.');
       }
     });
   });
